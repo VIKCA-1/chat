@@ -1,4 +1,5 @@
 #include "mainwidget.h"
+#include "matrixclient.h"
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QMessageBox>
@@ -7,6 +8,9 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Matrix Client");
     resize(400, 250);
+
+    cl = new MatrixClient(this);
+    connect(cl, &MatrixClient::loginOk, this, &MainWidget::LoginOk);
 
     QGridLayout* grid = new QGridLayout(this);
 
@@ -51,4 +55,11 @@ void MainWidget::LoginCl()
 
     loginBtn->setEnabled(false);
     statusLabel->setText("Выполняется вход");
+    cl->login(server, login, pass);
+}
+
+void MainWidget::LoginOk(const QString& token, const QString& uid)
+{
+    QString a = "Вы вошли как " + uid;
+    statusLabel->setText(a);
 }
